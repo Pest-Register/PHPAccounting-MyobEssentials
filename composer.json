@@ -1,0 +1,35 @@
+{
+    "name": "pest-register/php-accounting-myobessentials",
+    "description": "MYOB Essentials package for PHP Accounting",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Max",
+            "email": "max@pestregister.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "vlucas/phpdotenv": "^3.3",
+        "nesbot/carbon": "^2.18"
+    },
+    "autoload": {
+        "psr-4": { "PHPAccounting\\MyobEssentials\\" : "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php-http/guzzle6-adapter": "*",
+        "ext-json": "*",
+        "omnipay/common": "^3.0",
+        "fzaninotto/faker": "^1.8"
+    },
+    "scripts": {
+        "docs": "swagger src/"
+    },
+    "prefer-stable": true
+}
