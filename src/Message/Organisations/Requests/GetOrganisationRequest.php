@@ -9,9 +9,9 @@ use PHPAccounting\MyobEssentials\Message\Organisations\Responses\GetOrganisation
  */
 class GetOrganisationRequest extends AbstractRequest
 {
-    public function setCompanyEndpoint($value)
+    public function setBusinessID($value)
     {
-        return $this->setParameter('companyEndpoint','https://api.myob.com/accountright/');
+        return parent::setBusinessID('');
     }
 
     public function getHttpMethod()

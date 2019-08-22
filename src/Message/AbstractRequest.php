@@ -11,7 +11,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      * @var string URL
      */
     protected $data = [];
-    protected $version = 'v2';
+    protected $version = 'v0';
 
     /**
      * Get Access Token
@@ -25,20 +25,20 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('accessToken', $value);
     }
 
-    public function getCompanyEndpoint() {
-        return $this->getParameter('companyEndpoint');
+    public function getBusinessID() {
+        return $this->getParameter('businessID');
     }
 
-    public function setCompanyEndpoint($value) {
-        return $this->setParameter('companyEndpoint', $value);
+    public function setBusinessID($value) {
+        return $this->setParameter('businessID', $value);
     }
 
-    public function getCompanyFile() {
-        return $this->getParameter('companyFile');
+    public function getCountryCode() {
+        return $this->getParameter('countryCode');
     }
 
-    public function setCompanyFile($value) {
-        return $this->setParameter('companyFile',$value);
+    public function setCountryCode($value) {
+        return $this->setParameter('countryCode', $value);
     }
 
     public function getAPIKey() {
@@ -82,9 +82,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function getHeaders()
     {
         $headers = array();
-        if ($this->getCompanyFile()) {
-            $headers['x-myobapi-cftoken'] = $this->getCompanyFile();
-        }
         if ($this->getAPIKey()) {
             $headers['x-myobapi-key'] = $this->getAPIKey();
         }
@@ -118,11 +115,14 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function sendData($data)
     {
-        $endpoint = $this->getCompanyEndpoint();
+        $endpoint = 'https://api.myob.com/'. $this->getCountryCode().'/essentials/businesses/'. $this->getBusinessID();
         $headers = $this->getHeaders();
-        $body = $data ? http_build_query($data, '', '&') : null;
+
+        $body = json_encode($data);
         $httpResponse = $this->httpClient->request($this->getHttpMethod(), $endpoint . $this->getEndpoint(), $headers, $body);
-        return $this->createResponse(json_decode($httpResponse->getBody()->getContents(), true), $httpResponse->getHeaders());
+
+        $this->createResponse(json_decode($httpResponse->getBody()->getContents(), true), $httpResponse->getHeaders());
+        return $this->response;
     }
 
     protected function createResponse($data, $headers = [])

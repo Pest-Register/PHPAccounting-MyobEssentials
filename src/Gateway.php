@@ -67,23 +67,34 @@ class Gateway extends AbstractGateway
         return $this->setParameter('APIKey', $value);
     }
 
+    /**
+     * Country Code getters and setters
+     * @return mixed
+     */
 
-    public function setCompanyFile($value)
+    public function getCountryCode()
     {
-        return $this->setParameter('companyFile', $value);
+        return $this->getParameter('countryCode');
     }
 
-    public function getCompanyFile() {
-        return $this->getParameter('companyFile');
-    }
-
-    public function setCompanyEndpoint($value)
+    public function setCountryCode($value)
     {
-        return $this->setParameter('companyEndpoint', $value);
+        return $this->setParameter('countryCode', $value);
     }
 
-    public function getCompanyEndpoint() {
-        return $this->getParameter('companyEndpoint');
+    /**
+     * Business ID getters and setters
+     * @return mixed
+     */
+
+    public function getBusinessID()
+    {
+        return $this->getParameter('businessID');
+    }
+
+    public function setBusinessID($value)
+    {
+        return $this->setParameter('businessID', $value);
     }
 
 
@@ -202,5 +213,49 @@ class Gateway extends AbstractGateway
 
     public function getCurrentUser(array $parameters = []){
         return $this->createRequest('\PHPAccounting\MyobEssentials\Message\CurrentUser\Requests\GetCurrentUserRequest', $parameters);
+    }
+
+    /**
+     * Journal Requests
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+
+    public function createJournal(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\CreateJournalRequest', $parameters);
+    }
+
+    public function updateJournal(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\UpdateJournalRequest', $parameters);
+    }
+
+    public function getJournal(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\GetJournalRequest', $parameters);
+    }
+
+    public function deleteJournal(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\DeleteJournalRequest', $parameters);
+    }
+
+    /**
+     * InventoryItem Requests
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+
+    public function createInventoryItem(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\CreateInventoryItemRequest', $parameters);
+    }
+
+    public function updateInventoryItem(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\UpdateInventoryItemRequest', $parameters);
+    }
+
+    public function getInventoryItem(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\GetInventoryItemsRequest', $parameters);
+    }
+
+    public function deleteInventoryItem(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\DeleteInventoryItemRequest', $parameters);
     }
 }

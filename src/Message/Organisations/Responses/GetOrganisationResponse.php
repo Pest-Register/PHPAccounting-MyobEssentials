@@ -5,8 +5,8 @@ use Omnipay\Common\Message\AbstractResponse;
 use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
 
 /**
- * Get Contact(s) Response
- * @package PHPAccounting\MyobEssentials\Message\Contacts\Responses
+ * Get Organisation(s) Response
+ * @package PHPAccounting\MyobEssentials\Message\Organisations\Responses
  */
 class GetOrganisationResponse extends AbstractResponse
 {
@@ -17,8 +17,8 @@ class GetOrganisationResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        if(array_key_exists('status', $this->data)){
-            return !$this->data['status'] == 'error';
+        if(array_key_exists('errors', $this->data)){
+            return false;
         }
         return true;
     }
@@ -29,8 +29,13 @@ class GetOrganisationResponse extends AbstractResponse
      */
     public function getErrorMessage()
     {
-        if (array_key_exists('status', $this->data)) {
-            return $this->data['detail'];
+        if (array_key_exists('errors', $this->data)) {
+            if ($this->data['errors'][0]['message'] === 'Invalid authentication token.') {
+                return 'The access token has expired';
+            }
+            else {
+                return $this->data['errors'][0]['message'];
+            }
         }
         return null;
     }
@@ -42,12 +47,12 @@ class GetOrganisationResponse extends AbstractResponse
      */
     public function getOrganisations(){
         $organisations = [];
-        foreach ($this->data as $organisation) {
+        foreach ($this->data['items'] as $organisation) {
             $newOrganisation = [];
-            $newOrganisation['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('Id', $organisation);
-            $newOrganisation['name'] = IndexSanityCheckHelper::indexSanityCheck('Name', $organisation);
-            $newOrganisation['uri'] = IndexSanityCheckHelper::indexSanityCheck('Uri', $organisation);
-            $newOrganisation['country_code'] = IndexSanityCheckHelper::indexSanityCheck('Country', $organisation);
+            $newOrganisation['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $organisation);
+            $newOrganisation['name'] = IndexSanityCheckHelper::indexSanityCheck('name', $organisation);
+            $newOrganisation['uri'] = IndexSanityCheckHelper::indexSanityCheck('uri', $organisation);
+            $newOrganisation['country_code'] = IndexSanityCheckHelper::indexSanityCheck('country', $organisation);
             array_push($organisations, $newOrganisation);
         }
 

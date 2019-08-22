@@ -19,8 +19,8 @@ class BaseTest extends TestCase
 
         $this->gateway->setAPIKey(getenv('API_KEY'));
         $this->gateway->setAccessToken(getenv('ACCESS_TOKEN'));
-        $this->gateway->setCompanyEndpoint(getenv('COMPANY_FILE_URI'));
-        $this->gateway->setCompanyFile(base64_encode('Administrator:'));
+        $this->gateway->setBusinessID(getenv('BUSINESS_ID'));
+        $this->gateway->setCountryCode(getenv('COUNTRY_CODE'));
     }
 
 }
