@@ -115,8 +115,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function sendData($data)
     {
-        $endpoint = 'https://api.myob.com/'. $this->getCountryCode().'/essentials/businesses/'. $this->getBusinessID();
+        $endpoint = 'https://api.myob.com/'. $this->getCountryCode().'/essentials/businesses/'. $this->getBusinessID().'/';
         $headers = $this->getHeaders();
+        var_dump($endpoint . $this->getEndpoint());
 
         $body = json_encode($data);
         $httpResponse = $this->httpClient->request($this->getHttpMethod(), $endpoint . $this->getEndpoint(), $headers, $body);

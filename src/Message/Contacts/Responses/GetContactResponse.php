@@ -17,8 +17,8 @@ class GetContactResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        if(array_key_exists('status', $this->data)){
-            return !$this->data['status'] == 'error';
+        if(array_key_exists('errors', $this->data)){
+            return false;
         }
         return true;
     }
@@ -29,45 +29,39 @@ class GetContactResponse extends AbstractResponse
      */
     public function getErrorMessage()
     {
-        if (array_key_exists('status', $this->data)) {
-            return $this->data['detail'];
+        if (array_key_exists('errors', $this->data)) {
+            if ($this->data['errors'][0]['message'] === 'Invalid authentication token.') {
+                return 'The access token has expired';
+            }
+            else {
+                return $this->data['errors'][0]['message'];
+            }
         }
         return null;
     }
 
-    public function addPhone($contact, $data) {
-        $newPhone = [];
-        $newPhone['type'] = 'OTHER';
-        $newPhone['phone_number'] = $data;
-        array_push($contact, $newPhone);
+    public function addPhone($contact, $data, $type) {
+        if($data) {
+            $newPhone = [];
+            $newPhone['type'] = $type;
+            $newPhone['phone_number'] = $data;
+            array_push($contact['phones'], $newPhone);
+        }
+        return $contact;
     }
 
 
-    public function parseAddressesAndPhones($contact, $data) {
-        $contact['addresses'] = [];
+    public function addAddress($contact, $data, $type) {
         if ($data) {
-            $addresses = [];
-            foreach($data as $address) {
-                $newAddress = [];
-                $newAddress['address_type'] = 'EXTRA';
-                $newAddress['address_line_1'] = IndexSanityCheckHelper::indexSanityCheck('Street', $address);
-                $newAddress['city'] = IndexSanityCheckHelper::indexSanityCheck('City', $address);
-                $newAddress['postal_code'] = IndexSanityCheckHelper::indexSanityCheck('PostCode', $address);
-                $newAddress['country'] = IndexSanityCheckHelper::indexSanityCheck('Country', $address);
+            $newAddress = [];
+            $newAddress['address_type'] = $type;
+            $newAddress['address_line_1'] = IndexSanityCheckHelper::indexSanityCheck('addressLine1', $data);
+            $newAddress['address_line_2'] = IndexSanityCheckHelper::indexSanityCheck('addressLine2', $data);
+            $newAddress['city'] = IndexSanityCheckHelper::indexSanityCheck('suburb', $data);
+            $newAddress['postal_code'] = IndexSanityCheckHelper::indexSanityCheck('postCode', $data);
+            $newAddress['country'] = IndexSanityCheckHelper::indexSanityCheck('country', $data);
 
-                if (array_key_exists('Phone1', $address)) {
-                    $this->addPhone($contact, $address['Phone1']);
-                }
-                if (array_key_exists('Phone2', $address)) {
-                    $this->addPhone($contact, $address['Phone2']);
-                }
-                if (array_key_exists('Phone3', $address)) {
-                    $this->addPhone($contact, $address['Phone3']);
-                }
-
-                array_push($addresses, $newAddress);
-            }
-            $contact['addresses'] = $addresses;
+            array_push($contact['addresses'], $newAddress);
         }
 
         return $contact;
@@ -78,18 +72,47 @@ class GetContactResponse extends AbstractResponse
      */
     public function getContacts(){
         $contacts = [];
-        foreach ($this->data['Items'] as $contact) {
+        foreach ($this->data['items'] as $contact) {
             $newContact = [];
-            $newContact['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('UID', $contact);
-            $newContact['first_name'] = IndexSanityCheckHelper::indexSanityCheck('FirstName', $contact);
-            $newContact['last_name'] = IndexSanityCheckHelper::indexSanityCheck('LastName', $contact);
-            $newContact['display_name'] = IndexSanityCheckHelper::indexSanityCheck('DisplayID', $contact);
-            $newContact['is_individual'] = IndexSanityCheckHelper::indexSanityCheck('IsIndividual', $contact);
-            $newContact['type'] = IndexSanityCheckHelper::indexSanityCheck('Type', $contact);
-            $newContact['updated_at'] = IndexSanityCheckHelper::indexSanityCheck('LastModified', $contact);
+            $newContact['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $contact);
+            $newContact['first_name'] = IndexSanityCheckHelper::indexSanityCheck('firstName', $contact);
+            $newContact['last_name'] = IndexSanityCheckHelper::indexSanityCheck('lastName', $contact);
+            $newContact['email'] = IndexSanityCheckHelper::indexSanityCheck('email', $contact);
+            $newContact['website'] = IndexSanityCheckHelper::indexSanityCheck('website', $contact);
+            $newContact['display_name'] = IndexSanityCheckHelper::indexSanityCheck('name', $contact);
+            $newContact['is_individual'] = IndexSanityCheckHelper::indexSanityCheck('individual', $contact);
+            $newContact['type'] = IndexSanityCheckHelper::indexSanityCheck('types', $contact);
 
-            if (array_key_exists('Addresses', $contact)) {
-                $newContact = $this->parseAddressesAndPhones($newContact, $contact['Addresses']);
+            $newContact['addresses'] = [];
+            $newContact['phones'] = [];
+            if (array_key_exists('shippingAddress', $contact)) {
+                if ($contact['shippingAddress']) {
+                    $newContact = $this->addAddress($newContact, $contact['shippingAddress'], 'PRIMARY');
+                }
+            }
+
+            if (array_key_exists('billingAddress', $contact)) {
+                if ($contact['billingAddress']) {
+                    $newContact = $this->addAddress($newContact, $contact['billingAddress'], 'BILLING');
+                }
+            }
+
+            if (array_key_exists('phone', $contact)) {
+                if ($contact['phone']) {
+                    $newContact = $this->addPhone($newContact, $contact['phone'], 'DEFAULT');
+                }
+            }
+
+            if (array_key_exists('mobile', $contact)) {
+                if ($contact['mobile']) {
+                    $newContact = $this->addPhone($newContact, $contact['mobile'], 'MOBILE');
+                }
+            }
+
+            if (array_key_exists('fax', $contact)) {
+                if ($contact['fax']) {
+                    $newContact = $this->addPhone($newContact, $contact['fax'], 'FAX');
+                }
             }
 
             array_push($contacts, $newContact);

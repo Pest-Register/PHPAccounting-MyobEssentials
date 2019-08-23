@@ -258,4 +258,27 @@ class Gateway extends AbstractGateway
     public function deleteInventoryItem(array $parameters = []){
         return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\DeleteInventoryItemRequest', $parameters);
     }
+
+
+    /**
+     * TaxRate Requests
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+
+    public function createTaxRate(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\TaxRates\Requests\CreateTaxRateRequest', $parameters);
+    }
+
+    public function updateTaxRate(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\TaxRates\Requests\UpdateTaxRateRequest', $parameters);
+    }
+
+    public function getTaxRate(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\TaxRates\Requests\GetTaxRateRequest', $parameters);
+    }
+
+    public function deleteTaxRate(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\TaxRates\Requests\DeleteTaxRateRequest', $parameters);
+    }
 }

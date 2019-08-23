@@ -1,19 +1,25 @@
 <?php
-namespace PHPAccounting\MyobEssentials\Message\Contacts\Requests;
+
+namespace PHPAccounting\MyobEssentials\Message\TaxRates\Requests;
 
 use PHPAccounting\MyobEssentials\Helpers\BuildEndpointHelper;
+use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
 use PHPAccounting\MyobEssentials\Message\AbstractRequest;
-use PHPAccounting\MyobEssentials\Message\Contacts\Responses\GetContactResponse;
+use PHPAccounting\MyobEssentials\Message\Accounts\Responses\GetAccountResponse;
+use PHPAccounting\MyobEssentials\Message\TaxRates\Responses\GetTaxRateResponse;
+
+
 /**
- * Get Contact(s)
- * @package PHPAccounting\MyobEssentials\Message\Contacts\Requests
+ * Get Tax Rate(s)
+ * @package PHPAccounting\MyobEssentials\Message\TaxRates\Requests
  */
-class GetContactRequest extends AbstractRequest
+class GetTaxRateRequest extends AbstractRequest
 {
+
     /**
      * Set AccountingID from Parameter Bag (UID generic interface)
      * @param $value
-     * @return GetContactRequest
+     * @return GetTaxRateRequest
      */
     public function setAccountingID($value) {
         return $this->setParameter('accounting_id', $value);
@@ -22,14 +28,14 @@ class GetContactRequest extends AbstractRequest
     /**
      * Set Page Value for Pagination from Parameter Bag
      * @param $value
-     * @return GetContactRequest
+     * @return GetTaxRateRequest
      */
     public function setPage($value) {
         return $this->setParameter('page', $value);
     }
 
     /**
-     * Return Accounting ID (UID)
+     * Return Accounting IDs (UID)
      * @return mixed comma-delimited-string
      */
     public function getAccountingID() {
@@ -54,7 +60,7 @@ class GetContactRequest extends AbstractRequest
     public function getEndpoint()
     {
 
-        $endpoint = 'contacts';
+        $endpoint = 'GeneralLedger/TaxCode/';
 
         if ($this->getAccountingID()) {
             if ($this->getAccountingID() !== "") {
@@ -77,7 +83,7 @@ class GetContactRequest extends AbstractRequest
 
     protected function createResponse($data, $headers = [])
     {
-        return $this->response = new GetContactResponse($this, $data);
+        return $this->response = new GetTaxRateResponse($this, $data);
     }
 
 }

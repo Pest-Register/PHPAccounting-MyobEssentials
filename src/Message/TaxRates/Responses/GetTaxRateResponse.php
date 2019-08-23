@@ -1,16 +1,17 @@
 <?php
 
-namespace PHPAccounting\MyobEssentials\Message\Accounts\Responses;
+namespace PHPAccounting\MyobEssentials\Message\TaxRates\Responses;
 
 use Omnipay\Common\Message\AbstractResponse;
 use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
 
 /**
- * Delete ContactGroup(s) Response
+ * Get ContactGroup(s) Response
  * @package PHPAccounting\MyobEssentials\Message\ContactGroups\Responses
  */
-class DeleteAccountResponse extends AbstractResponse
+class GetTaxRateResponse extends AbstractResponse
 {
+
     /**
      * Check Response for Error or Success
      * @return boolean
@@ -44,9 +45,23 @@ class DeleteAccountResponse extends AbstractResponse
      * Return all Accounts with Generic Schema Variable Assignment
      * @return array
      */
-    public function getAccounts(){
-        $accounts = [];
+    public function getTaxRates(){
+        $taxRates = [];
 
-        return $accounts;
+        foreach ($this->data['Items'] as $taxRate) {
+            $newTaxRate = [];
+            $newTaxRate['accounting_id'] =  IndexSanityCheckHelper::indexSanityCheck('UID', $taxRate);
+            $newTaxRate['name'] = IndexSanityCheckHelper::indexSanityCheck('Description', $taxRate);
+            $newTaxRate['tax_type'] = IndexSanityCheckHelper::indexSanityCheck('Code', $taxRate);
+            $newTaxRate['rate'] = IndexSanityCheckHelper::indexSanityCheck('Rate', $taxRate);
+            $newTaxRate['is_asset'] = true;
+            $newTaxRate['is_equity'] = true;
+            $newTaxRate['is_expense'] = true;
+            $newTaxRate['is_liability'] = true;
+            $newTaxRate['is_revenue'] = true;
+            array_push($taxRates, $newTaxRate);
+        }
+
+        return $taxRates;
     }
 }

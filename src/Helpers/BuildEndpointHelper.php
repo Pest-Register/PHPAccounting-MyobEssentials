@@ -6,15 +6,15 @@ namespace PHPAccounting\MyobEssentials\Helpers;
 
 class BuildEndpointHelper
 {
-    public static function loadByGUID($endpoint, $guid, $filterPrefix='') {
-        $prefix = '?$';
-        $endpoint = $endpoint . $prefix."filter=".$filterPrefix."UID eq guid'".$guid."'";
+    public static function loadByGUID($endpoint, $guid, $filterPrefix='', $filter ='') {
+        $prefix = '?';
+        $endpoint = $endpoint.'/'.$guid.$prefix.$filterPrefix.'='.$filter;
         return $endpoint;
     }
 
     public static function paginate($endpoint, $page) {
-        $prefix = '?$';
-        $endpoint = $endpoint . $prefix."top=".$page;
+        $prefix = '?';
+        $endpoint = $endpoint.$prefix."page=".$page;
         return $endpoint;
     }
 }

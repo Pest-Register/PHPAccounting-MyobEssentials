@@ -59,7 +59,7 @@ class GetAccountRequest extends AbstractRequest
     public function getEndpoint()
     {
 
-        $endpoint = 'GeneralLedger/Account/';
+        $endpoint = 'generalledger/accounts';
 
         if ($this->getAccountingID()) {
             if ($this->getAccountingID() !== "") {
