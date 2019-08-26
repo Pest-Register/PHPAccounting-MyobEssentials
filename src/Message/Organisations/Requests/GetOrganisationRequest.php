@@ -26,6 +26,6 @@ class GetOrganisationRequest extends AbstractRequest
 
     public function getEndpoint()
     {
-        return '';
+        return 'businesses';
     }
 }
