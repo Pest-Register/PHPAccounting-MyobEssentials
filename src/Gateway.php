@@ -94,7 +94,7 @@ class Gateway extends AbstractGateway
 
     public function setBusinessID($value)
     {
-        return $this->setParameter('businessID', $value);
+        return $this->setParameter('businessID', 'businesses/' .$value);
     }
 
 
@@ -206,16 +206,6 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * CurrentUser Requests
-     * @param array $parameters
-     * @return \Omnipay\Common\Message\AbstractRequest
-     */
-
-    public function getCurrentUser(array $parameters = []){
-        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\CurrentUser\Requests\GetCurrentUserRequest', $parameters);
-    }
-
-    /**
      * Journal Requests
      * @param array $parameters
      * @return \Omnipay\Common\Message\AbstractRequest
@@ -252,7 +242,7 @@ class Gateway extends AbstractGateway
     }
 
     public function getInventoryItem(array $parameters = []){
-        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\GetInventoryItemsRequest', $parameters);
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\GetInventoryItemRequest', $parameters);
     }
 
     public function deleteInventoryItem(array $parameters = []){

@@ -16,6 +16,11 @@ use PHPAccounting\MyobEssentials\Message\TaxRates\Responses\GetTaxRateResponse;
 class GetTaxRateRequest extends AbstractRequest
 {
 
+    public function setBusinessID($value)
+    {
+        return parent::setBusinessID('');
+    }
+
     /**
      * Set AccountingID from Parameter Bag (UID generic interface)
      * @param $value
@@ -60,7 +65,7 @@ class GetTaxRateRequest extends AbstractRequest
     public function getEndpoint()
     {
 
-        $endpoint = 'GeneralLedger/TaxCode/';
+        $endpoint = 'tax/types';
 
         if ($this->getAccountingID()) {
             if ($this->getAccountingID() !== "") {

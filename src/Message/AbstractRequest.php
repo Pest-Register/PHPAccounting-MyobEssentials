@@ -49,6 +49,14 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('apiKey',$value);
     }
 
+    public function setBusinessEndpoint($value) {
+        return $this->setParameter('businessEndpoint', $value);
+    }
+
+    public function getBusinessEndpoint() {
+        return $this->getParameter('businessEndpoint');
+    }
+
     abstract public function getEndpoint();
 
     /**
@@ -115,9 +123,13 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function sendData($data)
     {
-        $endpoint = 'https://api.myob.com/'. $this->getCountryCode().'/essentials/businesses/'. $this->getBusinessID().'/';
+        if ($this->getBusinessID() !== '') {
+            $endpoint = 'https://api.myob.com/'. $this->getCountryCode().'/essentials/'. $this->getBusinessID().'/';
+        } else {
+            $endpoint = 'https://api.myob.com/'. $this->getCountryCode().'/essentials/';
+        }
+
         $headers = $this->getHeaders();
-        var_dump($endpoint . $this->getEndpoint());
 
         $body = json_encode($data);
         $httpResponse = $this->httpClient->request($this->getHttpMethod(), $endpoint . $this->getEndpoint(), $headers, $body);

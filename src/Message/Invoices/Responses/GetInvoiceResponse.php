@@ -17,8 +17,8 @@ class GetInvoiceResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        if(array_key_exists('status', $this->data)){
-            return !$this->data['status'] == 'error';
+        if(array_key_exists('errors', $this->data)){
+            return false;
         }
         return true;
     }
@@ -27,9 +27,15 @@ class GetInvoiceResponse extends AbstractResponse
      * Fetch Error Message from Response
      * @return string
      */
-    public function getErrorMessage(){
-        if(array_key_exists('status', $this->data)){
-            return $this->data['detail'];
+    public function getErrorMessage()
+    {
+        if (array_key_exists('errors', $this->data)) {
+            if ($this->data['errors'][0]['message'] === 'Invalid authentication token.') {
+                return 'The access token has expired';
+            }
+            else {
+                return $this->data['errors'][0]['message'];
+            }
         }
         return null;
     }
@@ -40,11 +46,11 @@ class GetInvoiceResponse extends AbstractResponse
      * @param array $invoice MYOB Invoice Object Mapping
      * @return mixed
      */
-    private function parseCustomer($invoice, $data) {
+    private function parseContact($invoice, $data) {
         if ($data) {
             $newContact = [];
-            $newContact['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('UID', $data);
-            $newContact['name'] = IndexSanityCheckHelper::indexSanityCheck('Name', $data);
+            $newContact['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $data);
+            $newContact['name'] = IndexSanityCheckHelper::indexSanityCheck('name', $data);
             $invoice['contact'] = $newContact;
         }
 
@@ -57,33 +63,34 @@ class GetInvoiceResponse extends AbstractResponse
      * @param array $invoice MYOB Invoice Object Mapping
      * @return mixed
      */
-    private function parseLineItems($invoice, $data) {
+    private function parseLineItems($invoice, $data, $invoiceID) {
         if ($data) {
             $lineItems = [];
+            $counter = 0;
             foreach($data as $lineItem) {
                 $newLineItem = [];
-                $newLineItem['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('RowID', $lineItem);
-                $newLineItem['description'] = IndexSanityCheckHelper::indexSanityCheck('Description', $lineItem);
-                $newLineItem['unit_amount'] = IndexSanityCheckHelper::indexSanityCheck('UnitPrice', $lineItem);
-                $newLineItem['line_amount'] = IndexSanityCheckHelper::indexSanityCheck('Total', $lineItem);
-                $newLineItem['quantity'] = IndexSanityCheckHelper::indexSanityCheck('ShipQuantity', $lineItem);
-                $newLineItem['discount_rate'] = IndexSanityCheckHelper::indexSanityCheck('DiscountPercent', $lineItem);;
-                $newLineItem['amount'] = IndexSanityCheckHelper::indexSanityCheck('Total', $lineItem);
+                $newLineItem['accounting_id'] = $invoiceID.'-'.$counter;
+                $newLineItem['description'] = IndexSanityCheckHelper::indexSanityCheck('description', $lineItem);
+                $newLineItem['unit_amount'] = IndexSanityCheckHelper::indexSanityCheck('unitPrice', $lineItem);
+                $newLineItem['line_amount'] = IndexSanityCheckHelper::indexSanityCheck('total', $lineItem);
+                $newLineItem['quantity'] = IndexSanityCheckHelper::indexSanityCheck('quantity', $lineItem);
+                $newLineItem['amount'] = IndexSanityCheckHelper::indexSanityCheck('total', $lineItem);
 
-                if (array_key_exists('TaxCode', $lineItem)) {
-                    if ($lineItem['TaxCode']) {
-                        $newLineItem['tax_type'] = IndexSanityCheckHelper::indexSanityCheck('Number', $lineItem['TaxCode']);
+                if (array_key_exists('taxType', $lineItem)) {
+                    if ($lineItem['taxType']) {
+                        $newLineItem['tax_type'] = IndexSanityCheckHelper::indexSanityCheck('code', $lineItem['taxType']);
                     }
                 }
 
-                if (array_key_exists('Item', $lineItem)) {
-                    if ($lineItem['Item']) {
-                        $newLineItem['code'] = IndexSanityCheckHelper::indexSanityCheck('Number', $lineItem['Item']);
-                        $newLineItem['item_code'] = IndexSanityCheckHelper::indexSanityCheck('UID', $lineItem['Item']);
+                if (array_key_exists('item', $lineItem)) {
+                    if ($lineItem['item']) {
+                        $newLineItem['code'] = IndexSanityCheckHelper::indexSanityCheck('number', $lineItem['item']);
+                        $newLineItem['item_code'] = IndexSanityCheckHelper::indexSanityCheck('uid', $lineItem['item']);
                     }
                 }
 
                 array_push($lineItems, $newLineItem);
+                $counter++;
             }
 
             $invoice['invoice_data'] = $lineItems;
@@ -98,50 +105,75 @@ class GetInvoiceResponse extends AbstractResponse
      */
     public function getInvoices(){
         $invoices = [];
-        foreach ($this->data['Items'] as $invoice) {
-            $newInvoice = [];
-            $newInvoice['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('UID', $invoice);
-            $newInvoice['status'] = IndexSanityCheckHelper::indexSanityCheck('Status', $invoice);
-            $newInvoice['sub_total'] = IndexSanityCheckHelper::indexSanityCheck('Subtotal', $invoice);
-            $newInvoice['total_tax'] = IndexSanityCheckHelper::indexSanityCheck('TotalTax', $invoice);
-            $newInvoice['total'] = IndexSanityCheckHelper::indexSanityCheck('TotalAmount', $invoice);
-            $newInvoice['type'] = IndexSanityCheckHelper::indexSanityCheck('InvoiceType', $invoice);
-            $newInvoice['invoice_number'] = IndexSanityCheckHelper::indexSanityCheck('Number', $invoice);
-            $newInvoice['amount_due'] = IndexSanityCheckHelper::indexSanityCheck('BalanceDueAmount', $invoice);
-            $newInvoice['date'] = IndexSanityCheckHelper::indexSanityCheck('Date', $invoice);
+        if (array_key_exists('items', $this->data)) {
+            foreach ($this->data['items'] as $invoice) {
+                $newInvoice = [];
+                $newInvoice['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $invoice);
+                $newInvoice['status'] = IndexSanityCheckHelper::indexSanityCheck('status', $invoice);
+                $newInvoice['total_tax'] = IndexSanityCheckHelper::indexSanityCheck('gst', $invoice);
+                $newInvoice['total'] = IndexSanityCheckHelper::indexSanityCheck('total', $invoice);
+                $newInvoice['invoice_number'] = IndexSanityCheckHelper::indexSanityCheck('invoiceNumber', $invoice);
+                $newInvoice['amount_due'] = IndexSanityCheckHelper::indexSanityCheck('amountDue', $invoice);
+                $newInvoice['amount_paid'] = IndexSanityCheckHelper::indexSanityCheck('amountPaid', $invoice);
+                $newInvoice['date'] = IndexSanityCheckHelper::indexSanityCheck('issueDate', $invoice);
+                $newInvoice['due_date'] = IndexSanityCheckHelper::indexSanityCheck('dueDate', $invoice);
 
-            if (array_key_exists('Customer', $invoice)) {
-                if ($invoice['Customer']) {
-                    $newInvoice = $this->parseCustomer($newInvoice, $invoice['Customer']);
-                }
-            }
-
-            if (array_key_exists('Lines', $invoice)) {
-                if ($invoice['Lines']) {
-                    $newInvoice = $this->parseLineItems($newInvoice, $invoice['Lines']);
-                }
-            }
-
-            if (array_key_exists('TotalAmount', $invoice) && array_key_exists('BalanceDueAmount', $invoice)) {
-                if ($invoice['TotalAmount'] && $invoice['BalanceDueAmount']) {
-                    $amountPaid = floatval($invoice['TotalAmount']) - floatval($invoice['BalanceDueAmount']);
-                    if ($amountPaid) {
-                        $newInvoice['amount_paid'] = $amountPaid;
+                if (array_key_exists('gstInclusive', $invoice) && array_key_exists('gst', $invoice)) {
+                    if ($invoice['gstInclusive'] === true) {
+                        $newInvoice['subtotal'] = (float) $newInvoice['total'] - (float) $newInvoice['gst'];
                     } else {
-                        $newInvoice['amount_paid'] = 0.00;
+                        $newInvoice['subtotal'] = $newInvoice['total'];
                     }
+                }
+                if (array_key_exists('contact', $invoice)) {
+                    if ($invoice['contact']) {
+                        $newInvoice = $this->parseContact($newInvoice, $invoice['contact']);
+                    }
+                }
 
+                if (array_key_exists('lines', $invoice)) {
+                    if ($invoice['lines']) {
+                        $newInvoice = $this->parseLineItems($newInvoice, $invoice['lines'], $newInvoice['accounting_id']);
+                    }
+                }
+
+                array_push($invoices, $newInvoice);
+            }
+        } else {
+            $invoice = $this->data;
+            $newInvoice = [];
+            $newInvoice['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $invoice);
+            $newInvoice['status'] = IndexSanityCheckHelper::indexSanityCheck('status', $invoice);
+            $newInvoice['total_tax'] = IndexSanityCheckHelper::indexSanityCheck('gst', $invoice);
+            $newInvoice['total'] = IndexSanityCheckHelper::indexSanityCheck('total', $invoice);
+            $newInvoice['invoice_number'] = IndexSanityCheckHelper::indexSanityCheck('invoiceNumber', $invoice);
+            $newInvoice['amount_due'] = IndexSanityCheckHelper::indexSanityCheck('amountDue', $invoice);
+            $newInvoice['amount_paid'] = IndexSanityCheckHelper::indexSanityCheck('amountPaid', $invoice);
+            $newInvoice['date'] = IndexSanityCheckHelper::indexSanityCheck('issueDate', $invoice);
+            $newInvoice['due_date'] = IndexSanityCheckHelper::indexSanityCheck('dueDate', $invoice);
+
+            if (array_key_exists('gstInclusive', $invoice) && array_key_exists('gst', $invoice)) {
+                if ($invoice['gstInclusive'] === true) {
+                    $newInvoice['subtotal'] = (float) $invoice['total'] - (float) $invoice['gst'];
+                } else {
+                    $newInvoice['subtotal'] = $invoice['total'];
+                }
+            }
+            if (array_key_exists('contact', $invoice)) {
+                if ($invoice['contact']) {
+                    $newInvoice = $this->parseContact($newInvoice, $invoice['contact']);
                 }
             }
 
-            if (array_key_exists('Terms', $invoice)) {
-                if ($invoice['Terms']) {
-                    $newInvoice['due_date'] = IndexSanityCheckHelper::indexSanityCheck('DueDate', $invoice['Terms']);
+            if (array_key_exists('lines', $invoice)) {
+                if ($invoice['lines']) {
+                    $newInvoice = $this->parseLineItems($newInvoice, $invoice['lines'], $newInvoice['accounting_id']);
                 }
             }
 
             array_push($invoices, $newInvoice);
         }
+
 
         return $invoices;
     }

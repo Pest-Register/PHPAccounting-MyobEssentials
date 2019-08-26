@@ -13,22 +13,6 @@ class GetInvoiceRequest extends AbstractRequest
 {
 
     /**
-     * Set Invoice Type from Parameter Bag
-     * @param $value
-     * @return GetInvoiceRequest
-     */
-    public function setInvoiceType($value) {
-        return $this->setParameter('invoice_type', $value);
-    }
-
-    /**
-     * Get Invoice Type from Parameter Bag
-     */
-    public function getInvoiceType() {
-        return $this->getParameter('invoice_type');
-    }
-
-    /**
      * Set AccountingID from Parameter Bag (UID generic interface)
      * @param $value
      * @return GetInvoiceRequest
@@ -72,7 +56,7 @@ class GetInvoiceRequest extends AbstractRequest
     public function getEndpoint()
     {
 
-        $endpoint = 'Sale/Invoice/'.$this->getInvoiceType().'/';
+        $endpoint = 'sale/invoices';
 
         if ($this->getAccountingID()) {
             if ($this->getAccountingID() !== "") {

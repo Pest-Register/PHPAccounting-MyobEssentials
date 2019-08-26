@@ -1,25 +1,26 @@
 <?php
 
-namespace Tests\Invoices;
+
+namespace Tests\Journals;
 
 
 use Tests\BaseTest;
 
-class GetInvoiceTest extends BaseTest
+class GetJournalTest extends BaseTest
 {
 
-    public function testGetInvoices()
+    public function testGetJournals()
     {
         $this->setUp();
         try {
             $params = [
-                'accounting_id' => "405148525",
+                'accounting_ids' => [""],
                 'page' => 1
             ];
 
-            $response = $this->gateway->getInvoice($params)->send();
+            $response = $this->gateway->getJournal($params)->send();
             if ($response->isSuccessful()) {
-                var_dump($response->getInvoices());
+                var_dump($response->getJournals());
             } else {
                 var_dump($response->getErrorMessage());
             }

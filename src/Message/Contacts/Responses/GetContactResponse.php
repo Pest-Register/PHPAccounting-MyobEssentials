@@ -72,7 +72,54 @@ class GetContactResponse extends AbstractResponse
      */
     public function getContacts(){
         $contacts = [];
-        foreach ($this->data['items'] as $contact) {
+        if (array_key_exists('items', $this->data)) {
+            foreach ($this->data['items'] as $contact) {
+                $newContact = [];
+                $newContact['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $contact);
+                $newContact['first_name'] = IndexSanityCheckHelper::indexSanityCheck('firstName', $contact);
+                $newContact['last_name'] = IndexSanityCheckHelper::indexSanityCheck('lastName', $contact);
+                $newContact['email'] = IndexSanityCheckHelper::indexSanityCheck('email', $contact);
+                $newContact['website'] = IndexSanityCheckHelper::indexSanityCheck('website', $contact);
+                $newContact['display_name'] = IndexSanityCheckHelper::indexSanityCheck('name', $contact);
+                $newContact['is_individual'] = IndexSanityCheckHelper::indexSanityCheck('individual', $contact);
+                $newContact['type'] = IndexSanityCheckHelper::indexSanityCheck('types', $contact);
+
+                $newContact['addresses'] = [];
+                $newContact['phones'] = [];
+                if (array_key_exists('shippingAddress', $contact)) {
+                    if ($contact['shippingAddress']) {
+                        $newContact = $this->addAddress($newContact, $contact['shippingAddress'], 'PRIMARY');
+                    }
+                }
+
+                if (array_key_exists('billingAddress', $contact)) {
+                    if ($contact['billingAddress']) {
+                        $newContact = $this->addAddress($newContact, $contact['billingAddress'], 'BILLING');
+                    }
+                }
+
+                if (array_key_exists('phone', $contact)) {
+                    if ($contact['phone']) {
+                        $newContact = $this->addPhone($newContact, $contact['phone'], 'DEFAULT');
+                    }
+                }
+
+                if (array_key_exists('mobile', $contact)) {
+                    if ($contact['mobile']) {
+                        $newContact = $this->addPhone($newContact, $contact['mobile'], 'MOBILE');
+                    }
+                }
+
+                if (array_key_exists('fax', $contact)) {
+                    if ($contact['fax']) {
+                        $newContact = $this->addPhone($newContact, $contact['fax'], 'FAX');
+                    }
+                }
+
+                array_push($contacts, $newContact);
+            }
+        } else {
+            $contact = $this->data;
             $newContact = [];
             $newContact['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $contact);
             $newContact['first_name'] = IndexSanityCheckHelper::indexSanityCheck('firstName', $contact);
@@ -117,6 +164,7 @@ class GetContactResponse extends AbstractResponse
 
             array_push($contacts, $newContact);
         }
+
 
         return $contacts;
     }

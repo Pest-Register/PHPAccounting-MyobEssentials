@@ -2,6 +2,10 @@
 
 namespace Tests;
 
+use Omnipay\Omnipay;
+use PHPUnit\Framework\TestCase;
+use XeroPHP\Remote\Collection;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,22 +14,21 @@ namespace Tests;
  * Time: 9:54 AM
  */
 
-class GetContactTest extends BaseTest
+class GetTaxRateTest extends BaseTest
 {
 
-    public function testGetContacts()
+    public function testGetTaxRates()
     {
         $this->setUp();
-        $params = [
-            'accounting_id' => "",
-            'page' => 1
-        ];
-
         try {
+            $params = [
+                'accounting_ids' => [""],
+                'page' => 1
+            ];
 
-            $response = $this->gateway->getContact($params)->send();
+            $response = $this->gateway->getTaxRate($params)->send();
             if ($response->isSuccessful()) {
-                var_dump($response->getContacts());
+                var_dump($response->getTaxRates());
             } else {
                 var_dump($response->getErrorMessage());
             }

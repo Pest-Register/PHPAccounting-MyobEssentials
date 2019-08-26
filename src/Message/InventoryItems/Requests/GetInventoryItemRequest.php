@@ -1,21 +1,25 @@
 <?php
 
-
-namespace PHPAccounting\MyobEssentials\Message\Invoices\Requests;
-
+namespace PHPAccounting\MyobEssentials\Message\InventoryItems\Requests;
 
 use PHPAccounting\MyobEssentials\Helpers\BuildEndpointHelper;
+use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
 use PHPAccounting\MyobEssentials\Message\AbstractRequest;
-use PHPAccounting\MyobEssentials\Message\Invoices\Responses\GetInvoiceResponse;
-use PHPAccounting\MyobEssentials\Message\Invoices\Responses\GetInvoiceUIDsResponse;
+use PHPAccounting\MyobEssentials\Message\Accounts\Responses\GetAccountResponse;
+use PHPAccounting\MyobEssentials\Message\InventoryItems\Responses\GetInventoryItemResponse;
 
-class GetInvoiceUIDsRequest extends AbstractRequest
+
+/**
+ * Get Account(s)
+ * @package PHPAccounting\MyobEssentials\Message\InventoryItems\Requests
+ */
+class GetInventoryItemRequest extends AbstractRequest
 {
 
     /**
      * Set AccountingID from Parameter Bag (UID generic interface)
      * @param $value
-     * @return GetInvoiceUIDsRequest
+     * @return GetInventoryItemRequest
      */
     public function setAccountingID($value) {
         return $this->setParameter('accounting_id', $value);
@@ -24,14 +28,14 @@ class GetInvoiceUIDsRequest extends AbstractRequest
     /**
      * Set Page Value for Pagination from Parameter Bag
      * @param $value
-     * @return GetInvoiceUIDsRequest
+     * @return GetInventoryItemRequest
      */
     public function setPage($value) {
         return $this->setParameter('page', $value);
     }
 
     /**
-     * Return Accounting ID (UID)
+     * Return Accounting IDs (UID)
      * @return mixed comma-delimited-string
      */
     public function getAccountingID() {
@@ -56,7 +60,7 @@ class GetInvoiceUIDsRequest extends AbstractRequest
     public function getEndpoint()
     {
 
-        $endpoint = 'Sale/Invoice';
+        $endpoint = 'inventory/items';
 
         if ($this->getAccountingID()) {
             if ($this->getAccountingID() !== "") {
@@ -79,6 +83,7 @@ class GetInvoiceUIDsRequest extends AbstractRequest
 
     protected function createResponse($data, $headers = [])
     {
-        return $this->response = new GetInvoiceUIDsResponse($this, $data);
+        return $this->response = new GetInventoryItemResponse($this, $data);
     }
+
 }
