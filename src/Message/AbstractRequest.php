@@ -87,7 +87,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     /**
      * @return array
      */
-    public function getHeaders()
+    public function getHeaders($httpMethod)
     {
         $headers = array();
         if ($this->getAPIKey()) {
@@ -100,6 +100,11 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
         $headers['x-myobapi-version'] = $this->version;
         $headers['Accept-Encoding'] = 'gzip,deflate';
+
+        if ($httpMethod === 'POST' || $httpMethod === 'PUT') {
+            $headers['Content-Type'] = 'application/json';
+        }
+
 
         return $headers;
     }
@@ -129,7 +134,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             $endpoint = 'https://api.myob.com/'. $this->getCountryCode().'/essentials/';
         }
 
-        $headers = $this->getHeaders();
+        $headers = $this->getHeaders($this->getHttpMethod());
         $body = json_encode($data);
         $httpResponse = $this->httpClient->request($this->getHttpMethod(), $endpoint . $this->getEndpoint(), $headers, $body);
 

@@ -1,47 +1,66 @@
 <?php
-
 namespace PHPAccounting\MyobEssentials\Message\Contacts\Requests;
 
+use PHPAccounting\MyobEssentials\Helpers\BuildEndpointHelper;
 use PHPAccounting\MyobEssentials\Message\AbstractRequest;
 use PHPAccounting\MyobEssentials\Message\Contacts\Responses\DeleteContactResponse;
-
+use PHPAccounting\MyobEssentials\Message\Contacts\Responses\GetContactResponse;
 /**
  * Delete Contact(s)
  * @package PHPAccounting\MyobEssentials\Message\Contacts\Requests
  */
 class DeleteContactRequest extends AbstractRequest
 {
-
     /**
-     * Get the raw data array for this message. The format of this varies from gateway to
-     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     *
-     * @return mixed
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     * Set AccountingID from Parameter Bag (UID generic interface)
+     * @param $value
+     * @return DeleteContactRequest
      */
-    public function getData()
-    {
-        return $this->data;
+    public function setAccountingID($value) {
+        return $this->setParameter('accounting_id', $value);
     }
 
     /**
-     * Send Data to Xero Endpoint and Retrieve Response via Response Interface
-     * @param mixed $data Parameter Bag Variables After Validation
-     * @return \Omnipay\Common\Message\ResponseInterface|DeleteContactResponse
+     * Set Page Value for Pagination from Parameter Bag
+     * @param $value
+     * @return DeleteContactRequest
      */
-    public function sendData($data)
-    {
-        $response = [];
-        return $this->createResponse($response->getElements());
+    public function setPage($value) {
+        return $this->setParameter('page', $value);
     }
 
     /**
-     * Create Generic Response from Xero Endpoint
-     * @param mixed $data Array Elements or Xero Collection from Response
-     * @return DeleteContactResponse
+     * Return Accounting ID (UID)
+     * @return mixed comma-delimited-string
      */
-    public function createResponse($data)
+    public function getAccountingID() {
+        if ($this->getParameter('accounting_id')) {
+            return $this->getParameter('accounting_id');
+        }
+        return null;
+    }
+
+    public function getEndpoint()
+    {
+
+        $endpoint = 'contacts';
+
+        if ($this->getAccountingID()) {
+            if ($this->getAccountingID() !== "") {
+                $endpoint = BuildEndpointHelper::createForGUID($endpoint, $this->getAccountingID());
+            }
+        }
+        return $endpoint;
+    }
+
+    public function getHttpMethod()
+    {
+        return 'DELETE';
+    }
+
+    protected function createResponse($data, $headers = [])
     {
         return $this->response = new DeleteContactResponse($this, $data);
     }
+
 }
