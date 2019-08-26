@@ -21,7 +21,9 @@ class DeleteContactTest extends BaseTest
         try {
 
             $params = [
-                'accounting_id' => '29140062',
+                'accounting_id' => '29140824',
+                'type' => ['CUSTOMER'],
+                'name' => 'Bell O" Hara'
             ];
 
             $response = $this->gateway->deleteContact($params)->send();

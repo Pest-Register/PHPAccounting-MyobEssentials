@@ -46,7 +46,6 @@ class DeleteContactResponse extends AbstractResponse
      */
     public function getContacts(){
         $contacts = [];
-
         return $contacts;
     }
 }
