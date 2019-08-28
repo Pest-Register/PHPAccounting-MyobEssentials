@@ -13,27 +13,34 @@ use Tests\BaseTest;
 
 class UpdateInventoryItemTest extends BaseTest
 {
-    public function testGetInventoryItems()
+    public function testUpdateInventoryItem()
     {
         $this->setUp();
         try {
 
             $params = [
-                'accounting_id' => "ebdda49d-d57d-4ecb-934d-e8d3f8507f08",
+                'accounting_id' => 8101813,
                 'code' => 'DEV-OPS',
-                'name' => 'Development Operations Update',
+                'name' => 'Development Operations Test',
                 'is_selling' => true,
                 'is_buying' => true,
                 'description' => 'Development Operations',
                 'buying_description' => 'Development Operations',
+                'status' => 'ACTIVE',
+                'unit' => 'QTY',
+                'type' => 'Stock',
                 'purchase_details' => [
-                    'buying_unit_price' => 300,
+                    'buying_account_id' => 55970294,
+                    'buying_unit_price' => 120,
                     'buying_account_code' => 200,
+                    'buying_tax_type_id' => 10,
                     'buying_tax_type_code' => 'OUTPUT'
                 ],
                 'sales_details' => [
+                    'selling_account_id' => 55970288,
                     'selling_unit_price' => 150,
                     'selling_account_code' => 200,
+                    'selling_tax_type_id' => 10,
                     'selling_tax_type_code' => 'OUTPUT'
                 ]
             ];

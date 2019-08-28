@@ -14,6 +14,9 @@ class UpdateInventoryItemResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
+        if ($this->data === null) {
+            return true;
+        }
         if(array_key_exists('errors', $this->data)){
             return false;
         }
@@ -41,9 +44,8 @@ class UpdateInventoryItemResponse extends AbstractResponse
      * Return all Invoices with Generic Schema Variable Assignment
      * @return array
      */
-    public function getAccounts(){
+    public function getInventoryItems(){
         $accounts = [];
-
         return $accounts;
     }
 }

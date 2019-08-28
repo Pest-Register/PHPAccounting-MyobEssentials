@@ -65,12 +65,14 @@ class GetInventoryItemResponse extends AbstractResponse
                     if ($item['saleAccount']) {
                         $newItem['is_selling'] = true;
                         $newItem['selling_account_code'] = IndexSanityCheckHelper::indexSanityCheck('displayId', $item['saleAccount']);
+                        $newItem['selling_account_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $item['saleAccount']);
                     }
                 }
 
                 if (array_key_exists('saleTaxType', $item)) {
                     if ($item['saleTaxType']) {
                         $newItem['selling_tax_type_code'] = IndexSanityCheckHelper::indexSanityCheck('code', $item['saleTaxType']);
+                        $newItem['selling_tax_type_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $item['saleTaxType']);
                     }
                 }
 
@@ -78,12 +80,14 @@ class GetInventoryItemResponse extends AbstractResponse
                     if ($item['purchaseAccount']) {
                         $newItem['is_buying'] = true;
                         $newItem['buying_account_code'] = IndexSanityCheckHelper::indexSanityCheck('displayId', $item['purchaseAccount']);
+                        $newItem['buying_account_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $item['purchaseAccount']);
                     }
                 }
 
                 if (array_key_exists('purchaseTaxType', $item)) {
                     if ($item['purchaseTaxType']) {
                         $newItem['buying_tax_type_code'] = IndexSanityCheckHelper::indexSanityCheck('code', $item['purchaseTaxType']);
+                        $newItem['buying_tax_type_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $item['purchaseTaxType']);
                     }
                 }
 
