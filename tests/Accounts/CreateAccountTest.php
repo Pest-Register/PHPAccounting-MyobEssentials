@@ -9,17 +9,18 @@ class CreateAccountTest extends BaseTest
         try {
 
             $params = [
-                'code' => 999,
-                'name' => 'Test',
-                'type' => 'EXPENSE',
+                'code' => 998,
+                'name' => 'Test2',
+                'type' => 'Current Assets',
+                'type_id' => 2,
                 'status' => 'ACTIVE',
                 'description' => 'Test Description',
-                'tax_type' => 'INPUT',
-                'enable_payments_to_account' => true,
-                'show_inexpense_claims' => true
+                'tax_type' => 'GST Free',
+                'tax_type_id' => 8
             ];
 
             $response = $this->gateway->createAccount($params)->send();
+            var_dump($response);
             if ($response->isSuccessful()) {
                 $this->assertIsArray($response->getData());
                 var_dump($response->getAccounts());

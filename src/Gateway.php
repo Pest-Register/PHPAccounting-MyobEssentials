@@ -206,6 +206,16 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * Account Type Requests
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+
+    public function getAccountType(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\AccountTypes\Requests\GetAccountTypeRequest', $parameters);
+    }
+
+    /**
      * Journal Requests
      * @param array $parameters
      * @return \Omnipay\Common\Message\AbstractRequest

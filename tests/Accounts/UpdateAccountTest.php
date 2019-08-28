@@ -7,30 +7,30 @@ use Omnipay\Omnipay;
 
 class UpdateAccountTest extends BaseTest
 {
-    public function testUpdateAccount()
-    {
+    public function testUpdateAccount(){
         $this->setUp();
-        $faker = Faker\Factory::create();
         try {
 
             $params = [
-                'accounting_id' => 'b086f4fc-b699-463e-8bcc-b8d56a3b3a45',
-                'name' => 'Test 1',
-                'type' => 'EXPENSE',
-                'description' => 'Test Description 1',
-                'tax_type' => 'INPUT',
-                'enable_payments_to_account' => true,
-                'show_inexpense_claims' => true
+                'accounting_id' => 63030472,
+                'code' => 998,
+                'name' => 'Test3',
+                'type' => 'Current Assets',
+                'type_id' => 2,
+                'status' => 'ACTIVE',
+                'description' => 'Test Description',
+                'tax_type' => 'GST Free',
+                'tax_type_id' => 8
             ];
 
-            $response = $this->gateway->updateAccount($params)->send();
+            $response = $this->gateway->createAccount($params)->send();
             if ($response->isSuccessful()) {
-                $accounts = $response->getAccounts();
-                var_dump($accounts);
-                $this->assertIsArray($accounts);
+                $this->assertIsArray($response->getData());
+                var_dump($response->getAccounts());
             }
+            var_dump($response->getErrorMessage());
         } catch (\Exception $exception) {
-            var_dump($exception->getMessage());
+            var_dump($exception->getTrace());
         }
     }
 }

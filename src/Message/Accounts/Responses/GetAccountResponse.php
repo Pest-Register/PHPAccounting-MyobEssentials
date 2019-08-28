@@ -80,6 +80,7 @@ class GetAccountResponse extends AbstractResponse
             if (array_key_exists('type', $account)) {
                 if ($account['type']) {
                     $newAccount['type'] = IndexSanityCheckHelper::indexSanityCheck('name', $account['type']);
+                    $newAccount['type_accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $account['type']);
                     $newAccount['is_bank_account'] = ($account['type'] === 'Banking');
                 }
             }

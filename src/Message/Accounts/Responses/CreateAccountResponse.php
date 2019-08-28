@@ -46,7 +46,10 @@ class CreateAccountResponse extends AbstractResponse
      */
     public function getAccounts(){
         $accounts = [];
-
+        $account = $this->data;
+        $newAccount = [];
+        $newAccount['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $account);
+        array_push($accounts, $newAccount);
         return $accounts;
     }
 }
