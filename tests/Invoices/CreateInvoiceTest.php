@@ -12,13 +12,14 @@ class CreateInvoiceTest extends BaseTest
         try {
 
             $params = [
+                'invoice_reference' => '20190806_0001',
                 'type' => 'ACCREC',
                 'date' => '2019-01-27',
                 'due_date' => '2019-01-28',
-                'contact' => '9cc976e6-2a1f-4c2a-af5c-b7fc7616b79e',
-                'invoice_reference' => '1234',
+                'contact' => '29140824',
                 'total' => 6400,
                 'status' => 'Open',
+                'gst_inclusive' => true,
                 'invoice_data' => [
                     [
                         'description' => 'Consulting services as agreed (20% off standard rate)',
@@ -29,13 +30,14 @@ class CreateInvoiceTest extends BaseTest
                         'code' => 200,
                         'unit' => 'QTY',
                         'tax_id' => '',
-                        'account_id' => '',
-                        'item_id' => ''
+                        'account_id' => '63240545',
+                        'item_id' => '8101813'
                     ]
                 ]
             ];
 
             $response = $this->gateway->createInvoice($params)->send();
+            var_dump($response);
             if ($response->isSuccessful()) {
                 $this->assertIsArray($response->getData());
                 var_dump($response->getInvoices());

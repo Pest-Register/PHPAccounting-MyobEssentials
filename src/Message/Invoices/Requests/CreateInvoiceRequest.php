@@ -14,6 +14,24 @@ use PHPAccounting\MyobEssentials\Message\Invoices\Responses\CreateInvoiceRespons
  */
 class CreateInvoiceRequest extends AbstractRequest
 {
+    /**
+     * Get Invoice Reference Parameter from Parameter Bag
+     * @see https://developer.myob.com/api/essentials-accounting/endpoints/sale/invoices
+     * @return mixed
+     */
+    public function getInvoiceReference(){
+        return $this->getParameter('invoice_reference');
+    }
+
+    /**
+     * Set Invoice Reference Parameter from Parameter Bag
+     * @see https://developer.myob.com/api/essentials-accounting/endpoints/sale/invoices
+     * @param string $value Invoice Type
+     * @return CreateInvoiceRequest
+     */
+    public function setInvoiceReference($value){
+        return $this->setParameter('invoice_reference', $value);
+    }
 
     /**
      * Get Type Parameter from Parameter Bag
@@ -149,6 +167,24 @@ class CreateInvoiceRequest extends AbstractRequest
         return $this->setParameter('contact', $value);
     }
 
+    /**
+     * Get GST Inclusive Parameter from Parameter Bag
+     * @see https://developer.myob.com/api/essentials-accounting/endpoints/sale/invoices
+     * @return mixed
+     */
+    public function getGSTInclusive(){
+        return $this->getParameter('gst_inclusive');
+    }
+
+    /**
+     * Set GST Inclusive Parameter from Parameter Bag
+     * @see https://developer.myob.com/api/essentials-accounting/endpoints/sale/invoices
+     * @return CreateInvoiceRequest
+     */
+    public function setGSTInclusive($value){
+        return $this->setParameter('gst_inclusive', $value);
+    }
+
     private function parseLines($lines, $data) {
         $data['lines'] = [];
         if ($lines) {
@@ -164,7 +200,6 @@ class CreateInvoiceRequest extends AbstractRequest
                 $newLine['account']['uid'] = IndexSanityCheckHelper::indexSanityCheck('account_id', $line);
                 $newLine['item']['uid'] = IndexSanityCheckHelper::indexSanityCheck('item_id', $line);
                 $newLine['taxType']['uid'] = IndexSanityCheckHelper::indexSanityCheck('tax_id', $line);
-                $newLine['contact']['uid'] = IndexSanityCheckHelper::indexSanityCheck('contact', $line);
                 array_push($data['lines'], $newLine);
             }
         }
@@ -183,12 +218,18 @@ class CreateInvoiceRequest extends AbstractRequest
 
         $this->issetParam('issueDate', 'date');
         $this->issetParam('dueDate', 'due_date');
-        $this->issetParam('invoiceNumber', 'invoice_number');
-        $this->issetParam('status', 'invoice_status');
+        $this->issetParam('invoiceNumber', 'invoice_reference');
+        $this->issetParam('status', 'status');
         $this->issetParam('total', 'total');
+        $this->issetParam('gstInclusive', 'gst_inclusive');
         if ($this->getInvoiceData() !== null) {
             $this->data = $this->parseLines($this->getInvoiceData(), $this->data);
         }
+        if ($this->getContact() !== null) {
+            $this->data['contact'] = [];
+            $this->data['contact']['uid'] = $this->getContact();
+        }
+        var_dump($this->data);
 
         return $this->data;
     }

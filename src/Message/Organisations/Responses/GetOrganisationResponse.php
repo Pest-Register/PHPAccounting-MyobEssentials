@@ -53,6 +53,7 @@ class GetOrganisationResponse extends AbstractResponse
             $newOrganisation['name'] = IndexSanityCheckHelper::indexSanityCheck('name', $organisation);
             $newOrganisation['uri'] = IndexSanityCheckHelper::indexSanityCheck('uri', $organisation);
             $newOrganisation['country_code'] = IndexSanityCheckHelper::indexSanityCheck('country', $organisation);
+            $newOrganisation['gst_registered'] = IndexSanityCheckHelper::indexSanityCheck('gstRegistered', $organisation);
             array_push($organisations, $newOrganisation);
         }
 
