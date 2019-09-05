@@ -22,11 +22,11 @@ class DeleteInvoiceTest extends BaseTest
         try {
 
             $params = [
-                'accounting_id' => 'fc714cd8-98b6-44b9-90a4-55189d56872d',
-                'status' => 'DELETED'
+                'accounting_id' => '426865532'
             ];
 
             $response = $this->gateway->deleteInvoice($params)->send();
+            var_dump($response);
             if ($response->isSuccessful()) {
                 $invoices = $response->getInvoices();
                 var_dump($invoices);

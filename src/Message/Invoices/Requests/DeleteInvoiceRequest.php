@@ -2,7 +2,9 @@
 
 namespace PHPAccounting\MyobEssentials\Message\Invoices\Requests;
 
+use PHPAccounting\MyobEssentials\Helpers\BuildEndpointHelper;
 use PHPAccounting\MyobEssentials\Message\AbstractRequest;
+use PHPAccounting\MyobEssentials\Message\Contacts\Responses\DeleteContactResponse;
 use PHPAccounting\MyobEssentials\Message\Invoices\Responses\DeleteInvoiceResponse;
 
 /**
@@ -12,37 +14,53 @@ use PHPAccounting\MyobEssentials\Message\Invoices\Responses\DeleteInvoiceRespons
 class DeleteInvoiceRequest extends AbstractRequest
 {
 
+    /**
+     * Set AccountingID from Parameter Bag (UID generic interface)
+     * @param $value
+     * @return DeleteInvoiceRequest
+     */
+    public function setAccountingID($value) {
+        return $this->setParameter('accounting_id', $value);
+    }
 
     /**
-     * Get the raw data array for this message. The format of this varies from gateway to
-     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     *
-     * @return mixed
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     * Return Accounting ID (UID)
+     * @return mixed comma-delimited-string
      */
+    public function getAccountingID() {
+        if ($this->getParameter('accounting_id')) {
+            return $this->getParameter('accounting_id');
+        }
+        return null;
+    }
+
     public function getData()
     {
+        $this->issetParam('uid', 'accounting_id');
         return $this->data;
     }
 
-    /**
-     * Send Data to Xero Endpoint and Retrieve Response via Response Interface
-     * @param mixed $data Parameter Bag Variables After Validation
-     * @return \Omnipay\Common\Message\ResponseInterface|DeleteInvoiceResponse
-     */
-    public function sendData($data)
+    public function getEndpoint()
     {
-        $response = [];
-        return $this->createResponse($response->getElements());
+
+        $endpoint = 'sale/invoices';
+
+        if ($this->getAccountingID()) {
+            if ($this->getAccountingID() !== "") {
+                $endpoint = BuildEndpointHelper::createForGUID($endpoint, $this->getAccountingID());
+            }
+        }
+        return $endpoint;
     }
 
-    /**
-     * Create Generic Response from Xero Endpoint
-     * @param mixed $data Array Elements or Xero Collection from Response
-     * @return DeleteInvoiceResponse
-     */
-    public function createResponse($data)
+    public function getHttpMethod()
+    {
+        return 'DELETE';
+    }
+
+    protected function createResponse($data, $headers = [])
     {
         return $this->response = new DeleteInvoiceResponse($this, $data);
     }
+
 }

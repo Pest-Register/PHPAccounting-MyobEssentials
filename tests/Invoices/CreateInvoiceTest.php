@@ -20,16 +20,17 @@ class CreateInvoiceTest extends BaseTest
                 'total' => 6400,
                 'status' => 'Open',
                 'gst_inclusive' => true,
+                'gst_registered' => true,
                 'invoice_data' => [
                     [
                         'description' => 'Consulting services as agreed (20% off standard rate)',
-                        'quantity' => '10',
-                        'unit_amount' => '100.00',
-                        'discount_rate' => '20',
+                        'quantity' => 10,
+                        'unit_amount' => 100.00,
+                        'discount_rate' => 20,
                         'amount' => 800,
                         'code' => 200,
                         'unit' => 'QTY',
-                        'tax_id' => '',
+                        'tax_id' => '10',
                         'account_id' => '63240545',
                         'item_id' => '8101813'
                     ]
@@ -37,7 +38,6 @@ class CreateInvoiceTest extends BaseTest
             ];
 
             $response = $this->gateway->createInvoice($params)->send();
-            var_dump($response);
             if ($response->isSuccessful()) {
                 $this->assertIsArray($response->getData());
                 var_dump($response->getInvoices());
