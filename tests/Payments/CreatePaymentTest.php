@@ -13,7 +13,7 @@ class CreatePaymentTest extends BaseTest
 
             $params = [
                 'contact' => [
-                    'accounting_id' => ''
+                    'accounting_id' => '27915429'
                 ],
                 'currency_rate' => 1.0,
                 'amount' => 100.00,
@@ -21,10 +21,10 @@ class CreatePaymentTest extends BaseTest
                 'is_reconciled' => true,
                 'date' => '2019-06-27',
                 'invoice' => [
-                    'accounting_id' => '426865532'
+                    'accounting_id' => '406886309'
                 ],
                 'account' => [
-                    'accounting_id' => '55970284'
+                    'accounting_id' => '55970259'
                 ]
             ];
 
