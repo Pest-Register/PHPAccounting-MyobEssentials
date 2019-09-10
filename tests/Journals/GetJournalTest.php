@@ -15,10 +15,13 @@ class GetJournalTest extends BaseTest
         try {
             $params = [
                 'accounting_ids' => [""],
-                'page' => 1
+                'page' => 1,
+                'toDate' => '2019-10-09',
+                'fromDate' => '2018-10-09'
             ];
 
             $response = $this->gateway->getJournal($params)->send();
+            var_dump($response);
             if ($response->isSuccessful()) {
                 var_dump($response->getJournals());
             } else {

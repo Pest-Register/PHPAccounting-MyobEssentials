@@ -221,21 +221,28 @@ class Gateway extends AbstractGateway
      * @return \Omnipay\Common\Message\AbstractRequest
      */
 
-    public function createJournal(array $parameters = []){
-        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\CreateJournalRequest', $parameters);
-    }
-
-    public function updateJournal(array $parameters = []){
-        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\UpdateJournalRequest', $parameters);
-    }
-
     public function getJournal(array $parameters = []){
         return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\GetJournalRequest', $parameters);
     }
 
-    public function deleteJournal(array $parameters = []){
-        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\Journals\Requests\DeleteJournalRequest', $parameters);
+    /**
+     * Manual Journal Requests
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+
+    public function getManualJournal(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\ManualJournals\Requests\GetManualJournalRequest', $parameters);
     }
+
+    public function createManualJournal(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\ManualJournals\Requests\CreateManualJournalRequest', $parameters);
+    }
+
+    public function updateManualJournal(array $parameters = []){
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\ManualJournals\Requests\UpdateManualJournalRequest', $parameters);
+    }
+
 
     /**
      * InventoryItem Requests

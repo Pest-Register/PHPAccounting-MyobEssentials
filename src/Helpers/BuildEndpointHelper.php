@@ -22,4 +22,13 @@ class BuildEndpointHelper
         $endpoint = $endpoint.'/'.$guid;
         return $endpoint;
     }
+
+    public static function paginateLegacy($endpoint, $page, $fromDate = '', $toDate = '') {
+        $prefix = '?&';
+        $endpoint = $endpoint.$prefix."pageNumber=".$page;
+        if ($fromDate !== '' && $toDate !== '') {
+            $endpoint = $endpoint.'&fromDate='.$fromDate.'&toDate='.$toDate;
+        }
+        return $endpoint;
+    }
 }
