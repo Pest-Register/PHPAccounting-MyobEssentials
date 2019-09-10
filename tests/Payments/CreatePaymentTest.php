@@ -17,7 +17,7 @@ class CreatePaymentTest extends BaseTest
                 ],
                 'currency_rate' => 1.0,
                 'amount' => 100.00,
-                'reference_id' => 'PR000001',
+                'reference_id' => 'PR000002',
                 'is_reconciled' => true,
                 'date' => '2019-06-27',
                 'invoice' => [
