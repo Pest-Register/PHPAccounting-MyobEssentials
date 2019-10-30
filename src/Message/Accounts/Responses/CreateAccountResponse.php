@@ -6,7 +6,7 @@ use Omnipay\Common\Message\AbstractResponse;
 use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
 
 /**
- * Create ContactGroup(s) Response
+ * Create Account(s) Response
  * @package PHPAccounting\MyobEssentials\Message\ContactGroups\Responses
  */
 class CreateAccountResponse extends AbstractResponse

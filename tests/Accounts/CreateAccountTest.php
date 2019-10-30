@@ -9,8 +9,8 @@ class CreateAccountTest extends BaseTest
         try {
 
             $params = [
-                'code' => 998,
-                'name' => 'Test2',
+                'code' => 1002,
+                'name' => 'Test3',
                 'type' => 'Current Assets',
                 'type_id' => 2,
                 'status' => 'ACTIVE',
@@ -20,12 +20,13 @@ class CreateAccountTest extends BaseTest
             ];
 
             $response = $this->gateway->createAccount($params)->send();
-            var_dump($response);
             if ($response->isSuccessful()) {
                 $this->assertIsArray($response->getData());
                 var_dump($response->getAccounts());
+            } else {
+                var_dump($response->getErrorMessage());
             }
-            var_dump($response->getErrorMessage());
+
         } catch (\Exception $exception) {
             var_dump($exception->getTrace());
         }
