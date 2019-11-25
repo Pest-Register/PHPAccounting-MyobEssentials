@@ -245,7 +245,6 @@ class CreateInvoiceRequest extends AbstractRequest
         $this->issetParam('invoiceNumber', 'invoice_reference');
         $this->issetParam('status', 'status');
         $this->issetParam('total', 'total');
-        $this->issetParam('gstInclusive', 'gst_inclusive');
         if ($this->getInvoiceData() !== null && $this->getGSTRegistered() !== null) {
             $gst = $this->getGSTRegistered();
             $this->data = $this->parseLines($this->getInvoiceData(),$gst, $this->data);
@@ -253,6 +252,16 @@ class CreateInvoiceRequest extends AbstractRequest
         if ($this->getContact() !== null) {
             $this->data['contact'] = [];
             $this->data['contact']['uid'] = $this->getContact();
+        }
+
+        if ($this->getGSTInclusive()) {
+            if ($this->getGSTInclusive() === 'INCLUSIVE') {
+                $this->data['gstInclusive'] = true;
+            } else if ($this->getGSTInclusive() === 'EXCLUSIVE') {
+                $this->data['gstInclusive'] = false;
+            } else {
+                $this->data['gstInclusive'] = true;
+            }
         }
 
         return $this->data;

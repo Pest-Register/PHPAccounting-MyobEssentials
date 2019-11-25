@@ -117,6 +117,7 @@ class GetInvoiceResponse extends AbstractResponse
                 $newInvoice['amount_paid'] = IndexSanityCheckHelper::indexSanityCheck('amountPaid', $invoice);
                 $newInvoice['date'] = IndexSanityCheckHelper::indexSanityCheck('issueDate', $invoice);
                 $newInvoice['due_date'] = IndexSanityCheckHelper::indexSanityCheck('dueDate', $invoice);
+                $newInvoice['gst_inclusive'] = IndexSanityCheckHelper::indexSanityCheck('gstInclusive', $invoice);
 
                 if (array_key_exists('gstInclusive', $invoice) && array_key_exists('gst', $invoice)) {
                     if ($invoice['gstInclusive'] === true) {
@@ -151,6 +152,7 @@ class GetInvoiceResponse extends AbstractResponse
             $newInvoice['amount_paid'] = IndexSanityCheckHelper::indexSanityCheck('amountPaid', $invoice);
             $newInvoice['date'] = IndexSanityCheckHelper::indexSanityCheck('issueDate', $invoice);
             $newInvoice['due_date'] = IndexSanityCheckHelper::indexSanityCheck('dueDate', $invoice);
+            $newInvoice['gst_inclusive'] = IndexSanityCheckHelper::indexSanityCheck('gstInclusive', $invoice);
 
             if (array_key_exists('gstInclusive', $invoice) && array_key_exists('gst', $invoice)) {
                 if ($invoice['gstInclusive'] === true) {
