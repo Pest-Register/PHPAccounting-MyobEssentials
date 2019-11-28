@@ -186,7 +186,7 @@ class UpdateAccountRequest extends AbstractRequest
     public function getData()
     {
         $this->validate('code', 'name', 'type', 'type_id', 'tax_type', 'tax_type_id');
-
+        $this->issetParam('uid', 'accounting_id');
         $this->issetParam('displayId', 'code');
         $this->issetParam('name', 'name');
         if($this->getStatus() !== null) {
