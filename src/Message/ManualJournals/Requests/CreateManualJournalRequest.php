@@ -139,7 +139,7 @@ class CreateManualJournalRequest extends AbstractRequest
             $newJournalLine['description'] = IndexSanityCheckHelper::indexSanityCheck('description', $journalLine);
             $newJournalLine['amount'] = IndexSanityCheckHelper::indexSanityCheck('gross_amount', $journalLine);
             $newJournalLine['taxAmount'] = IndexSanityCheckHelper::indexSanityCheck('tax_amount', $journalLine);
-            $newJournalLine['credit'] = IndexSanityCheckHelper::indexSanityCheck('credit', $journalLine);
+            $newJournalLine['credit'] = IndexSanityCheckHelper::indexSanityCheck('is_credit', $journalLine);
             array_push($journal['journalEntries'], $newJournalLine);
         }
 
