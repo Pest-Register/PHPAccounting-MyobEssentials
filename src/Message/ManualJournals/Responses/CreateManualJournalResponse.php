@@ -53,9 +53,15 @@ class CreateManualJournalResponse extends AbstractResponse
                 }
                 $newJournalItem['credit'] = IndexSanityCheckHelper::indexSanityCheck('credit', $journalItem);
                 $newJournalItem['description'] = IndexSanityCheckHelper::indexSanityCheck('description', $journalItem);
-                $newJournalItem['line_amount'] = IndexSanityCheckHelper::indexSanityCheck('amount', $journalItem);
+                $newJournalItem['gross_amount'] = IndexSanityCheckHelper::indexSanityCheck('amount', $journalItem);
                 $newJournalItem['tax_amount'] = IndexSanityCheckHelper::indexSanityCheck('taxAmount', $journalItem);
                 $newJournalItem['is_credit'] = IndexSanityCheckHelper::indexSanityCheck('credit', $journalItem);
+
+                if (array_key_exists('tax_amount', $journalItem)) {
+                    $newJournalItem['net_amount'] = (float) $journalItem['amount'] + (float) $journalItem['taxAmount'];
+                } else {
+                    $newJournalItem['net_amount'] = (float) $journalItem['amount'];
+                }
                 array_push($journalItems, $newJournalItem);
             }
 
