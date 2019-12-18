@@ -14,10 +14,11 @@ class UpdateInventoryItemResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        if ($this->data === null) {
-            return true;
-        }
-        if(array_key_exists('errors', $this->data)){
+        if ($this->data) {
+            if(array_key_exists('errors', $this->data)){
+                return false;
+            }
+        } else {
             return false;
         }
         return true;
