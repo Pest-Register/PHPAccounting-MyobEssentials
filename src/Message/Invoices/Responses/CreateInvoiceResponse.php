@@ -30,14 +30,19 @@ class CreateInvoiceResponse extends AbstractResponse
      */
     public function getErrorMessage()
     {
-        if (array_key_exists('errors', $this->data)) {
-            if ($this->data['errors'][0]['message'] === 'Invalid authentication token.') {
-                return 'The access token has expired';
+        if ($this->data) {
+            if (array_key_exists('errors', $this->data)) {
+                if ($this->data['errors'][0]['message'] === 'Invalid authentication token.') {
+                    return 'The access token has expired';
+                }
+                else {
+                    return $this->data['errors'][0]['message'];
+                }
             }
-            else {
-                return $this->data['errors'][0]['message'];
-            }
+        } else {
+            return 'NULL returned from API';
         }
+
         return null;
     }
 
