@@ -38,8 +38,8 @@ class CreateContactResponse extends AbstractResponse
                 if ($this->data['errors'][0]['message'] === 'Invalid authentication token.') {
                     return 'The access token has expired';
                 }
-                else {
-                    return $this->data['errors'][0]['message'];
+                elseif (strpos($this->data['errors'][0]['message'], 'page not found') !== false) {
+                    return 'End of Pagination';
                 }
             }
         } else {
