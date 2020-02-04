@@ -4,6 +4,7 @@
 namespace PHPAccounting\MyobEssentials\Message\Accounts\Responses;
 
 use Omnipay\Common\Message\AbstractResponse;
+use PHPAccounting\MyobEssentials\Helpers\ErrorResponseHelper;
 use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
 
 class UpdateAccountResponse extends AbstractResponse
@@ -32,12 +33,7 @@ class UpdateAccountResponse extends AbstractResponse
     {
         if ($this->data) {
             if (array_key_exists('errors', $this->data)) {
-                if ($this->data['errors'][0]['message'] === 'Invalid authentication token.') {
-                    return 'The access token has expired';
-                }
-                elseif (strpos($this->data['errors'][0]['message'], 'page not found') !== false) {
-                    return 'End of Pagination';
-                }
+                return ErrorResponseHelper::parseErrorResponse($this->data['errors'][0]['message'], 'Account');
             }
         } else {
             return 'NULL returned from API';
