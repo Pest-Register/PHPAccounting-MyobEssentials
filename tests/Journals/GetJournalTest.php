@@ -21,7 +21,6 @@ class GetJournalTest extends BaseTest
             ];
 
             $response = $this->gateway->getJournal($params)->send();
-            var_dump($response);
             if ($response->isSuccessful()) {
                 var_dump($response->getJournals());
             } else {

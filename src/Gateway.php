@@ -263,7 +263,7 @@ class Gateway extends AbstractGateway
     }
 
     public function deleteInventoryItem(array $parameters = []){
-        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\DeleteInventoryItemRequest', $parameters);
+        return $this->createRequest('\PHPAccounting\MyobEssentials\Message\InventoryItems\Requests\UpdateInventoryItemRequest', $parameters);
     }
 
 

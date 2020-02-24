@@ -79,7 +79,6 @@ class GetJournalResponse extends AbstractResponse
      */
     public function getJournals(){
         $journals = [];
-        var_dump($this->data);
         foreach($this->data['items'] as $journal) {
             $newJournal = [];
             $newJournal['accounting_id'] = IndexSanityCheckHelper::indexSanityCheck('uid', $journal);;
@@ -89,10 +88,7 @@ class GetJournalResponse extends AbstractResponse
             if (array_key_exists('journalEntries', $journal)) {
                 $newJournal = $this->parseJournalItems($journal['journalEntries'], $newJournal);
             }
-
-
             array_push($journals, $newJournal);
-
         }
 
         return $journals;
