@@ -3,6 +3,7 @@
 namespace PHPAccounting\MyobEssentials\Message\Contacts\Responses;
 
 use Omnipay\Common\Message\AbstractResponse;
+use PHPAccounting\MyobEssentials\Helpers\ErrorResponseHelper;
 use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
 
 /**
