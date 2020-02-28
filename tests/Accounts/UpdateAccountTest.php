@@ -27,8 +27,10 @@ class UpdateAccountTest extends BaseTest
             if ($response->isSuccessful()) {
                 $this->assertIsArray($response->getData());
                 var_dump($response->getAccounts());
+            } else {
+                var_dump($response->getErrorMessage());
             }
-            var_dump($response->getErrorMessage());
+
         } catch (\Exception $exception) {
             var_dump($exception->getTrace());
         }

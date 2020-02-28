@@ -36,12 +36,12 @@ class CreateManualJournalTest extends BaseTest
             ];
 
             $response = $this->gateway->createManualJournal($params)->send();
-            var_dump($response);
             if ($response->isSuccessful()) {
                 $this->assertIsArray($response->getData());
                 var_dump($response->getManualJournals());
+            } else {
+                var_dump($response->getErrorMessage());
             }
-            var_dump($response->getErrorMessage());
         } catch (\Exception $exception) {
             var_dump($exception->getTrace());
         }

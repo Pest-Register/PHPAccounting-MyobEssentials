@@ -29,12 +29,12 @@ class CreatePaymentTest extends BaseTest
             ];
 
             $response = $this->gateway->createPayment($params)->send();
-            var_dump($response);
             if ($response->isSuccessful()) {
                 $this->assertIsArray($response->getData());
                 var_dump($response->getPayments());
+            } else {
+                var_dump($response->getErrorMessage());
             }
-            var_dump($response->getErrorMessage());
         } catch (\Exception $exception) {
             var_dump($exception->getMessage());
         }

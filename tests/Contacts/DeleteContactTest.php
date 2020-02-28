@@ -27,11 +27,12 @@ class DeleteContactTest extends BaseTest
             ];
 
             $response = $this->gateway->deleteContact($params)->send();
-            var_dump($response);
             if ($response->isSuccessful()) {
                 $contacts = $response->getContacts();
                 var_dump($contacts);
                 $this->assertIsArray($contacts);
+            } else {
+                var_dump($response->getErrorMessage());
             }
         } catch (\Exception $exception) {
             var_dump($exception->getMessage());
