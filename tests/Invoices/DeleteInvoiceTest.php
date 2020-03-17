@@ -26,11 +26,12 @@ class DeleteInvoiceTest extends BaseTest
             ];
 
             $response = $this->gateway->deleteInvoice($params)->send();
-            var_dump($response);
             if ($response->isSuccessful()) {
                 $invoices = $response->getInvoices();
                 var_dump($invoices);
                 $this->assertIsArray($invoices);
+            } else {
+                var_dump($response->getErrorMessage());
             }
         } catch (\Exception $exception) {
             var_dump($exception->getMessage());
