@@ -149,22 +149,22 @@ class CreateInventoryItemRequest extends AbstractRequest
     }
 
     /**
-     * Get Purchase Details Parameter from Parameter Bag
+     * Get Buying Details Parameter from Parameter Bag
      * @see https://developer.myob.com/api/essentials-accounting/endpoints/inventory/items
      * @return mixed
      */
-    public function getPurchaseDetails() {
-        return $this->getParameter('purchase_details');
+    public function getBuyingDetails() {
+        return $this->getParameter('buying_details');
     }
 
     /**
-     * Set Purchase Details Parameter from Parameter Bag
+     * Set Buying Details Parameter from Parameter Bag
      * @see https://developer.myob.com/api/essentials-accounting/endpoints/inventory/items
      * @param $value
      * @return mixed
      */
-    public function setPurchaseDetails($value) {
-        return $this->setParameter('purchase_details', $value);
+    public function setBuyingDetails($value) {
+        return $this->setParameter('buying_details', $value);
     }
 
     /**
@@ -253,7 +253,7 @@ class CreateInventoryItemRequest extends AbstractRequest
         return $data;
     }
 
-    private function parsePurchaseDetails($details, $data) {
+    private function parseBuyingDetails($details, $data) {
         $data['purchaseAccount'] = [];
         $data['purchaseTaxType'] = [];
         $data['purchaseAccount']['uid'] = IndexSanityCheckHelper::indexSanityCheck('buying_account_id', $details);
@@ -284,8 +284,8 @@ class CreateInventoryItemRequest extends AbstractRequest
             $this->data = $this->parseSalesDetails($this->getSalesDetails(), $this->data);
         }
 
-        if ($this->getPurchaseDetails() !== null) {
-            $this->data = $this->parsePurchaseDetails($this->getPurchaseDetails(), $this->data);
+        if ($this->getBuyingDetails() !== null) {
+            $this->data = $this->parseBuyingDetails($this->getBuyingDetails(), $this->data);
         }
 
         return $this->data;
