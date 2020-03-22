@@ -1,6 +1,7 @@
 <?php
 namespace PHPAccounting\MyobEssentials\Message\Contacts\Responses;
 
+use Cassandra\Index;
 use Omnipay\Common\Message\AbstractResponse;
 use PHPAccounting\MyobEssentials\Helpers\ErrorResponseHelper;
 use PHPAccounting\MyobEssentials\Helpers\IndexSanityCheckHelper;
@@ -65,6 +66,7 @@ class GetContactResponse extends AbstractResponse
             $newAddress['city'] = IndexSanityCheckHelper::indexSanityCheck('suburb', $data);
             $newAddress['postal_code'] = IndexSanityCheckHelper::indexSanityCheck('postCode', $data);
             $newAddress['country'] = IndexSanityCheckHelper::indexSanityCheck('country', $data);
+            $newAddress['state'] = IndexSanityCheckHelper::indexSanityCheck('state', $data);
 
             array_push($contact['addresses'], $newAddress);
         }
